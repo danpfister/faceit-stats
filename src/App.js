@@ -18,12 +18,12 @@ function StatsRequest(props) {
     const [isLoaded, setIsLoaded] = useState(false);
     const [items, setItems] = useState([]);
   
-    useEffect((props) => {
-        fetch("https://open.faceit.com/data/v4/players?nickname=danji--", {
-        headers: {
-            'accept': 'application/json',
-            'Authorization': `Bearer ${props.token}`//.concat("", props.token) //add token here
-        }
+    useEffect(() => {
+        fetch("https://open.faceit.com/data/v4/players?nickname=" + props.nickname, {
+            headers: {
+                'accept': 'application/json',
+                'Authorization': 'Bearer ' + props.token
+            }
         })
             .then(res => res.json())
             .then(
@@ -36,17 +36,17 @@ function StatsRequest(props) {
                 setError(error);
             }
             )
-        }, [])
+        }, [props.nickname])
     
-        if (error) {
+    if (error) {
         return <div>Error: {error.message}</div>;
-        } else if (!isLoaded) {
+    } else if (!isLoaded) {
         return <div>Loading...</div>;
-        } else {
+    } else {
         return (
             <div>{items['player_id']}</div>
         );
-        }
+    }
   }
 
 class App extends React.Component {
@@ -62,8 +62,7 @@ class App extends React.Component {
     handleNicknameSubmit(event) {
         event.preventDefault();
         this.setState({nickname: event.target.nicknameinput.value});
-        console.log('nickname in app: ' + this.state.nickname);
-        console.log(this.token);
+        console.log('received new nickname')
     }
 
     render() {
@@ -74,7 +73,7 @@ class App extends React.Component {
                     <NameForm handleSubmit={this.handleNicknameSubmit}/>
                 </div>
                 <div className='stats'>
-                    <StatsRequest nickname={this.state.nickname} token={this.api_token}/>
+                    <StatsRequest nickname={this.state.nickname} token={this.token}/>
                 </div>
             </div>
             

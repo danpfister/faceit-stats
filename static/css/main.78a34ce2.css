@@ -1,0 +1,2 @@
+.app{grid-gap:20px 20px;display:grid;font-family:Oswald,sans-serif;gap:20px 20px;grid-template-areas:"title title title" "nameform . ." "stats stats stats";grid-template-columns:10fr 1fr 1fr;height:100%;width:100%}.app>.title{font-size:50px;grid-area:title;justify-self:center}.app>.nameform{grid-area:nameform}.app>.stats{font-size:20px;grid-area:stats}.stats-item{display:inline-block;text-align:center;width:25%}
+/*# sourceMappingURL=main.78a34ce2.css.map*/

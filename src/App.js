@@ -13,6 +13,42 @@ function NameForm(props) {
     );
 }
 
+function StatsRequest(props) {
+    const [error, setError] = useState(null);
+    const [isLoaded, setIsLoaded] = useState(false);
+    const [items, setItems] = useState([]);
+  
+    useEffect(() => {
+      fetch("https://open.faceit.com/data/v4/players?nickname=+danji--", {
+        headers: {
+            'accept': 'application/json',
+            'Authorization': 'Bearer <token>' //add token here
+        }
+      })
+        .then(res => res.json())
+        .then(
+          (result) => {
+            setIsLoaded(true);
+            setItems(result);
+          },
+          (error) => {
+            setIsLoaded(true);
+            setError(error);
+          }
+        )
+    }, [])
+  
+    if (error) {
+      return <div>Error: {error.message}</div>;
+    } else if (!isLoaded) {
+      return <div>Loading...</div>;
+    } else {
+      return (
+        <div>{items['player_id']}</div>
+      );
+    }
+  }
+
 class App extends React.Component {
     constructor(props) {
         super(props);
@@ -35,7 +71,7 @@ class App extends React.Component {
                     <NameForm handleSubmit={this.handleNicknameSubmit}/>
                 </div>
                 <div className='stats'>
-                    temp
+                    <StatsRequest nickname={this.state.nickname}/>
                 </div>
             </div>
             

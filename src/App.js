@@ -1,28 +1,16 @@
 import React, {useState, useEffect} from 'react';
 import './App.css';
 
-class NameForm extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {value: ''};
-
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
-
-    handleChange(event) {
-        this.setState({value: event.target.value});
-    }
-
-    handleSubmit(event) {
-        console.log('name submitted: ' + this.state.value);
-        event.preventDefault();
-    }
-    render() {
-        return (
-            <div>test</div>
-        )
-    }
+function NameForm(props) {
+    return (
+        <div>
+            <h1>Enter your FACEIT Nickname</h1>
+            <form onSubmit={props.handleSubmit}>
+                <input name="nicknameinput" type="text" placeholder="FACEIT Nickname"/>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    );
 }
 
 class App extends React.Component {
@@ -34,19 +22,17 @@ class App extends React.Component {
         this.handleNicknameSubmit = this.handleNicknameSubmit.bind(this);
     }
 
-    handleNicknameChange(nickname) {
-        this.setState({nickname: nickname})
-    }
-
-    handleNicknameSubmit(nickname) {
-        console.log('app received ' + nickname);
+    handleNicknameSubmit(event) {
+        event.preventDefault();
+        this.setState({nickname: event.target.nicknameinput.value});
+        console.log('app received ' + event.target.nicknameinput.value);
     }
 
     render() {
         return (
             <div className='app'>
                 <div className='nameform'>
-                    <NameForm handleSubmit={this.handleNicknameSubmit} handleChange={this.handleNicknameChange}/>
+                    <NameForm handleSubmit={this.handleNicknameSubmit}/>
                 </div>
                 <div className='stats'>
                     temp

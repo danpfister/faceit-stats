@@ -77,11 +77,11 @@ function StatsRequest(props) {
         return <div></div>
     } else {
         return (
-            <div>
-                <div className='ELO'>ELO: {details['games']['csgo']['faceit_elo']}</div>
-                <div className='Win Rate'>Win Rate %: {stats['lifetime']['Win Rate %']}</div>
-                <div className='Win Rate'>Average Headshots %: {stats['lifetime']['Average Headshots %']}</div>
-                <div className='Win Rate'>Recent Results: {stats['lifetime']['Recent Results']}</div>
+            <div className='stats'>
+                <div className='stats-item'>ELO:<br/>{details['games']['csgo']['faceit_elo']}</div>
+                <div className='stats-item'>Win Rate %:<br/>{stats['lifetime']['Win Rate %']}</div>
+                <div className='stats-item'>Average Headshots %:<br/>{stats['lifetime']['Average Headshots %']}</div>
+                <div className='stats-item'>Recent Results:<br/>{stats['lifetime']['Recent Results']}</div>
             </div>
         );
     }
@@ -106,8 +106,9 @@ class App extends React.Component {
     render() {
         return (
             <div className='app'>
-                <h1>Enter your FACEIT Nickname</h1>
+                <div className='title'>FACEIT Stats Visualizer</div>
                 <div className='nameform'>
+                    <div>Enter your FACEIT Nickname</div>
                     <NameForm handleSubmit={this.handleNicknameSubmit}/>
                 </div>
                 <div className='stats'>

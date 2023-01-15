@@ -1,0 +1,36 @@
+.app {
+    font-family: 'Oswald', sans-serif;
+    display: grid;
+    grid-template-areas:
+        "title title title"
+        "nameform . ."
+        "stats stats stats";
+    grid-template-columns: 10fr 1fr 1fr;
+    gap: 20px 20px;
+    width: 100%;
+    height: 100%;
+}
+
+.app > .title {
+    font-size: 50px;
+    justify-self: center;
+    grid-area: title;
+    background-color: lightyellow;
+}
+
+.app > .nameform {
+    grid-area: nameform;
+    background-color: lightgreen;
+}
+
+.app > .stats {
+    font-size: 20px;
+    grid-area: stats;
+    background-color: lightblue;
+}
+
+.stats-item {
+    display: inline-block;
+    width: 25%;
+    text-align: center;
+}

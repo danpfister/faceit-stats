@@ -15,36 +15,51 @@ function NameForm(props) {
 
 function StatsRequest(props) {
     const [error, setError] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
     const [items, setItems] = useState([]);
   
     useEffect(() => {
+        if (props.nickname.length === 0) {
+            return;
+        }
+        console.log('fetching stats...')
+        setIsLoading(true);
         fetch("https://open.faceit.com/data/v4/players?nickname=" + props.nickname, {
             headers: {
                 'accept': 'application/json',
                 'Authorization': 'Bearer ' + props.token
             }
         })
-            .then(res => res.json())
+            .then(res => {
+                if (res.status !== 200) {
+                    throw new Error("Server responded with Error!");
+                }
+                return res.json()
+            })
             .then(
-            (result) => {
-                setIsLoaded(true);
-                setItems(result);
-            },
-            (error) => {
-                setIsLoaded(true);
-                setError(error);
-            }
+                (result) => {
+                    setIsLoading(false);
+                    setItems(result);
+                },
+                (error) => {
+                    setIsLoading(false);
+                    setError(error);
+                }
             )
-        }, [props.nickname])
+        setIsLoaded(true);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props.nickname])
     
     if (error) {
         return <div>Error: {error.message}</div>;
-    } else if (!isLoaded) {
+    } else if (isLoading) {
         return <div>Loading...</div>;
+    } else if (!isLoaded) {
+        return <div></div>
     } else {
         return (
-            <div>{items['player_id']}</div>
+            <div className='stats'>FACEIT Elo: {items['games']['csgo']['faceit_elo']}</div>
         );
     }
   }

@@ -17,30 +17,48 @@ function StatsRequest(props) {
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
-    const [items, setItems] = useState([]);
+    const [details, setDetails] = useState([]);
+    const [stats, setStats] = useState([]);
+
+    const headers = {
+        'accept': 'application/json',
+        'Authorization': 'Bearer ' + props.token
+    }
   
     useEffect(() => {
         if (props.nickname.length === 0) {
             return;
         }
-        console.log('fetching stats...')
         setIsLoading(true);
-        fetch("https://open.faceit.com/data/v4/players?nickname=" + props.nickname, {
-            headers: {
-                'accept': 'application/json',
-                'Authorization': 'Bearer ' + props.token
-            }
-        })
-            .then(res => {
-                if (res.status !== 200) {
+        fetch("https://open.faceit.com/data/v4/players?nickname=" + props.nickname, { headers })
+            .then(response => {
+                if (response.status !== 200) {
                     throw new Error("Server responded with Error!");
                 }
-                return res.json()
+                return response.json()
             })
             .then(
                 (result) => {
+                    console.log('retrieved player details')
+                    setDetails(result);
+                    return fetch("https://open.faceit.com/data/v4/players/" + result['player_id'] + "/stats/csgo", { headers });
+                },
+                (error) => {
+                    setError(error);
+                    return null;
+                }
+            )
+            .then(response => {
+                if (response.status !== 200) {
+                    throw new Error("Server responded with Error!");
+                }
+                return response.json()
+            })
+            .then(
+                (result) => {
+                    console.log('retrieved player stats');
                     setIsLoading(false);
-                    setItems(result);
+                    setStats(result);
                 },
                 (error) => {
                     setIsLoading(false);
@@ -59,7 +77,12 @@ function StatsRequest(props) {
         return <div></div>
     } else {
         return (
-            <div className='stats'>FACEIT Elo: {items['games']['csgo']['faceit_elo']}</div>
+            <div>
+                <div className='ELO'>ELO: {details['games']['csgo']['faceit_elo']}</div>
+                <div className='Win Rate'>Win Rate %: {stats['lifetime']['Win Rate %']}</div>
+                <div className='Win Rate'>Average Headshots %: {stats['lifetime']['Average Headshots %']}</div>
+                <div className='Win Rate'>Recent Results: {stats['lifetime']['Recent Results']}</div>
+            </div>
         );
     }
   }

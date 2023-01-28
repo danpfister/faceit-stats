@@ -18,6 +18,7 @@ function StatsRequest(props) {
     const [isLoading, setIsLoading] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
     const [details, setDetails] = useState([]);
+    const [matches, setMatches] = useState([]);
     const [stats, setStats] = useState([]);
 
     const headers = {
@@ -57,12 +58,30 @@ function StatsRequest(props) {
             .then(
                 (result) => {
                     console.log('retrieved player stats');
-                    setIsLoading(false);
                     setStats(result);
+                    return fetch("https://open.faceit.com/data/v4/players/" + result['player_id'] + "/history?game=csgo&offset=0&limit=20", { headers });
                 },
                 (error) => {
                     setIsLoading(false);
                     setError(error);
+                }
+            )
+            .then(response => {
+                if (response.status !== 200) {
+                    throw new Error("Server responded with Error!");
+                }
+                return response.json()
+            })
+            .then(
+                (result) => {
+                    console.log('retrieved player matches');
+                    setMatches(result);
+                    setIsLoading(false);
+                    return;
+                },
+                (error) => {
+                    setError(error);
+                    setIsLoading(false);
                 }
             )
         setIsLoaded(true);
